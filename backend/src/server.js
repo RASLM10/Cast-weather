@@ -10,6 +10,7 @@ const port = process.env.PORT || 5000;
 
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
 app.use(express.json());
+app.get('/', (_req, res) => res.json({ name: 'Cast Weather API', status: 'ok', health: '/api/health' }));
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', database: mongoose.connection.readyState === 1 ? 'connected' : 'offline' }));
 app.use('/api/weather', weatherRouter);
 app.use('/api/history', historyRouter);

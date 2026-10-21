@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
 const api = async (path, options) => {
-  const response = await fetch(path, options);
+  const response = await fetch(`${API_BASE_URL}${path}`, options);
   const text = response.status === 204 ? '' : await response.text();
   let body = null;
   try { body = text ? JSON.parse(text) : null; }

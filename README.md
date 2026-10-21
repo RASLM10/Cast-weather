@@ -33,3 +33,12 @@ The frontend is available at `http://localhost:5173` and the API at `http://loca
 - `GET /api/weather?city=London` — current weather and five-day forecast
 - `GET /api/history` — most recent city searches
 - `DELETE /api/history/:id` — remove a saved search
+
+## Deploy with Vercel
+
+Deploy this repository as two Vercel projects:
+
+1. **Backend:** set the root directory to `backend`. After it deploys, copy its URL (for example, `https://cast-weather-api.vercel.app`). Set `CLIENT_URL` to the deployed frontend URL once it is available. `MONGODB_URI` is optional; without it, weather works but history is not saved.
+2. **Frontend:** set the root directory to `frontend`, build command to `npm run build`, and output directory to `dist`. Add `VITE_API_URL` with the backend URL from step 1, then deploy.
+
+`VITE_API_URL` is intentionally public because it identifies the API endpoint only. Keep `WEATHER_API_KEY` and `MONGODB_URI` exclusively in the backend project's environment settings.
