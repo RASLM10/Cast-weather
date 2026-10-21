@@ -7,8 +7,16 @@ import historyRouter from './routes/history.js';
 
 const app = express();
 const port = process.env.PORT || 5000;
+const configuredOrigins = (process.env.CLIENT_URL || '').split(',').map((origin) => origin.trim()).filter(Boolean);
 
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+app.use(cors({
+  origin(origin, callback) {
+    const isLocal = !origin || /^http:\/\/localhost:\d+$/.test(origin);
+    const isVercelDeployment = origin?.endsWith('.vercel.app');
+    if (isLocal || isVercelDeployment || configuredOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Origin is not allowed by CORS.'));
+  },
+}));
 app.use(express.json());
 app.get('/', (_req, res) => res.json({ name: 'Cast Weather API', status: 'ok', health: '/api/health' }));
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', database: mongoose.connection.readyState === 1 ? 'connected' : 'offline' }));
