@@ -4,7 +4,10 @@ import './styles.css';
 
 const api = async (path, options) => {
   const response = await fetch(path, options);
-  const body = response.status === 204 ? null : await response.json();
+  const text = response.status === 204 ? '' : await response.text();
+  let body = null;
+  try { body = text ? JSON.parse(text) : null; }
+  catch { throw new Error(response.ok ? 'The weather service returned an invalid response.' : `The weather service is unavailable (${response.status}).`); }
   if (!response.ok) throw new Error(body?.message || 'Request failed');
   return body;
 };
